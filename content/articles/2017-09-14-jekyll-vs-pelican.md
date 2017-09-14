@@ -1,14 +1,15 @@
----
-layout: post
-title:  "PIT za 2016 na Fedorze"
-date:   2017-03-08 23:59:46 +0100
-categories: fedora linux pit wine
----
+Title: PIT za 2016 na Fedorze
+Date: 2017-03-08 10:20
+Category: Linux
+Tags: fedora, linux, pit, wine
+
+<!-- PELICAN_BEGIN_SUMMARY -->
 W pracy od kilku już lat pracuję w środowisku Linux. Mimo wszystkich wad Linuxa
 przyzwyczaiłem się i polubiłem go. Na magazynie używam Ubuntu 16.04. Ostatnio
 "z braku wolnego czasu" postanowiłem spróbować przejść na drugą stronę także w
 domu. Głównym komputerem żony jest telefon więc nie rzucała kłód pod nogi.
 Wybór padł na Fedorę 25. Dlaczego nie na Ubuntu to już opiszę w innym poście.
+<!-- PELICAN_END_SUMMARY --> 
 
 ## Pierwszy problem
 Tak czy siak, tuż po instalacji przyszedł czas na pierwszy poważny sprawdzian -
@@ -30,11 +31,11 @@ Zainstaluje wine oraz kilka niezbędnych dodatków. Następnie pobieramy instala
 klikamy prawym przyciskiem mszki na nim i z menu "Otwórz za pomocą innego programu"
 wybieramy "Wine Windows Program Launcher".
 
-![Wybór opcji menu](/assets/wine_instalator.png)
+![Wybór opcji menu]({filename}/img/wine_instalator.png)
 
 Uruchomi się standardowy instalator windows gdzie klikamy po prostu dalej, dalej itd.
 
-![Kreator instalacji PITy 2016 IPS](/assets/kreator_instalacji_pity_ips.png)
+![Kreator instalacji PITy 2016 IPS]({filename}/img/kreator_instalacji_pity_ips.png)
 
 Po zakończonej instalacji program możemy znaleźć w Dashu jako **PITy 2016**.
 
@@ -43,7 +44,7 @@ Po zakończonej instalacji program możemy znaleźć w Dashu jako **PITy 2016**.
 Po odpaleniu programu bez problemu mogłem wypełnić PIT-37, wysłać na Testowy serwer
 Ministerstwa a także wysłać już finalną wersję pitu do rozliczenia.
 
-![Okno programu PITy 2016](/assets/pity2016_ips.png)
+![Okno programu PITy 2016]({filename}/img/pity2016_ips.png)
 
 ## Problemy
 
