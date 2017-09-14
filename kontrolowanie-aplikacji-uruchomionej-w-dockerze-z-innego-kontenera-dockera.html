@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>Kontrolowanie aplikacji uruchomionej w dockerze z innego kontenera dockera | Testing, Linux, Git & stuff
+</title>
+  <link rel="canonical" href="http://czerus.github.io/kontrolowanie-aplikacji-uruchomionej-w-dockerze-z-innego-kontenera-dockera.html">
+
+  <link rel="alternate" type="application/atom+xml" href="http://czerus.github.io/feeds/all.atom.xml" title="Full Atom Feed">
+  <link rel="alternate" type="application/atom+xml" href="http://czerus.github.io/feeds/testing.atom.xml" title="Categories Atom Feed">
+
+
+  <link rel="stylesheet" href="http://czerus.github.io/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http://czerus.github.io/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="http://czerus.github.io/theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="http://czerus.github.io/theme/css/style.css">
+
+
+<meta name="description" content="O Dockerze pierwszy raz usłyszałem na JUC 2014:Berlin. Pamiętam, że byłem zachwycony ideą konteneryzacji aplikacji jak i szybkością z jaką działają kontenery (w porównaniu do standardowych maszyn wirtualnych). Cały technologiczny świat zachłysnął się kontenerami a mi przyszło rozwiązać następującą zagadkę: jak kontrolować aplikację uruchomioną w kontenerze z poziomu innej aplikacji uruchomionej w innym kontenerze?">
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="title"><a href="http://czerus.github.io/">Testing, Linux, Git & stuff</a></h1>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>Kontrolowanie aplikacji uruchomionej w dockerze z innego kontenera dockera
+</h1>
+      <hr>
+<article class="article">
+  <header>
+    <ul class="list-inline">
+      <li class="list-inline-item text-muted" title="2017-03-28T22:00:00+02:00">
+        <i class="fa fa-clock-o"></i>
+        wto 28 marzec 2017
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-folder-open-o"></i>
+        <a href="http://czerus.github.io/category/testing.html">Testing</a>
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-user-o"></i>
+        <a href="http://czerus.github.io/author/czerus.html">czerus</a>      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-files-o"></i>
+        <a href="http://czerus.github.io/tag/docker.html">#docker</a>,         <a href="http://czerus.github.io/tag/robot-framework.html">#robot framework</a>,         <a href="http://czerus.github.io/tag/remote-library.html">#remote library</a>      </li>
+    </ul>
+  </header>
+  <div class="content">
+    
+
+<p>O <a href="https://www.docker.com/">Dockerze</a> pierwszy raz usłyszałem na 
+<a href="https://www.cloudbees.com/event/juc/2014/berlin">JUC 2014:Berlin</a>. 
+Pamiętam, że byłem zachwycony ideą konteneryzacji aplikacji jak i szybkością z jaką działają kontenery 
+(w porównaniu do standardowych maszyn wirtualnych). Cały technologiczny świat zachłysnął się
+kontenerami a mi przyszło rozwiązać następującą zagadkę: jak kontrolować aplikację uruchomioną
+w kontenerze z poziomu innej aplikacji uruchomionej w innym kontenerze?
+</p>
+<h2>Problem</h2>
+<p>W ostatnim projekcie, w którym brałem udział natknąłem się na dosyć specyficzny
+problem. Całe środowisko testowe było uruchamiane w kontenerze dockera. W tym 
+samym kontenerze jest uruchomiony zarówno agent Bamboo jak i sam Robot Framework (RFW). Tak, 
+wiem, niezbyt to dockerowe. Sam SUT (System Under Test) uruchomiony był w osobnym kontenerze.</p>
+<p>Testując zawsze powinniśmy być pewni w jakim stanie znajduje się SUT. Idealnie każdy test 
+powinien przygotować sobie środowisko w setupie i posprzątać po sobie w teardownie.
+Bardzo często do przeprowadzenia testu potrzebne jest wprowadzenie do aplikacji pewnych
+danych testowych lub też wprowadzenie aplikacji w pewny znany nam stan. Pewne typy testów wymagają
+zmian w OS, w którym jest uruchomiony SUT. 
+W opisywanym przypadku testowana aplikacja po starcie wykonywała pewne operacje, których nie można było
+wywołać z poziomu API. Aby ptrzetestować wszystkie główne scenariusze związane ze wspomnianymi
+operacjami musiałem przy każdym test casie restartować SUT. Pewne scenariusze przewidywały brak 
+dostępu do sieci, inne powinny wyciąć tylko komunikację na jednym porcie (i to raz wychodzącą a innym
+razem przychodzącą)... Jednym słowem ciężki orzech do zgryzienia.</p>
+<p>Aby ułatwić sobie pracę podzieliłem problem na 2 mniejsze:</p>
+<ul>
+<li>Restartowanie SUT.</li>
+<li>Kontrola środowiska SUT.</li>
+</ul>
+<p>Po krótkim googlaniu i kilku rozmowach z programistą okazało się, że sam docker dostarcza narzędzi
+do rozwiązania wspomnianych problemów.</p>
+<h2>Restartowanie SUT</h2>
+<p>Z natury kontenery dockera "śledzą" jedną uruchomioną w nich aplikację. Po wyłączeniu/
+ubiciu aplikacji wyłącza się sam kontener. Tylko, że taki kontener pozostanie "martwy"
+na zawsze. Chyba, że dodamy do polecenia <code>docker run</code> opcję <code>--restart always</code>. Wtedy
+docker zrestartuje kontener:</p>
+<div class="highlight"><pre><span></span>$ docker run --restart always ubuntu:16.04
+</pre></div>
+
+
+<p>Powyższe polecenie uruchomi kontener z obrazu Ubuntu 16.04 i w przypadku, gdy główna
+aplikacja zostanie wyłączona i kontener się wyłączy, zostanie automatycznie znowu włączony.</p>
+<h2>Kontrola środowiska SUT</h2>
+<p>O ile SUT nie korzysta z <code>volume</code> do zapisywania ustawień restart spowoduje zrestartowanie
+ustawień aplikacji - kontenery są lepsze niż kobiety pod tym względem - "nie pamiętają".</p>
+<p>Ale jak zrestartować samą aplikację lub kontrolować jej środowisko uruchomienia?
+Z pomocą przychodzi biblioteka RFW <a href="https://github.com/robotframework/RemoteInterface">Remote</a>
+oraz zdalny serwer <code>XML-RPC</code>. Remote jest dosyć specyficzną biblioteką gdyż sama w sobie nie zawiera
+żadnych słów kluczowych. To co potrafi to udostępnianie wszytkich keywordów biblioteki uruchomionej
+z pomocą XML-RPC serwera. Neleży zatem stworzyć niemal standardową bibliotekę RFW
+(poszerzoną o uruchomienie serwera XML-RPC) i umieścić ją w kontenerze SUT. W test casie
+RFW dodajemy import biblioteki "Remote" z informacją gdzie znajduje się nasza zdalna biblioteka i już 
+możemy używać jej keywordów, które np. za pomocą komendy <code>kill</code> zabiją SUT a tym samym zrestartują cały kontener.
+Problem solved!</p>
+<h2>Przykład</h2>
+<p>Gotowy projekt zawierający szczegółowy opis oraz przykładowe Dockerfile i bibliotekę zdalną można pobrać z mojego
+repozytorium na <a href="https://github.com/czerus/control_docker_from_docker">githubie</a>.</p>
+  </div>
+</article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+       <ul class="col-sm-6 list-inline">
+          <li class="list-inline-item"><a href="http://czerus.github.io/authors.html">Authors</a></li>
+          <li class="list-inline-item"><a href="http://czerus.github.io/archives.html">Archives</a></li>
+          <li class="list-inline-item"><a href="http://czerus.github.io/categories.html">Categories</a></li>
+          <li class="list-inline-item"><a href="http://czerus.github.io/tags.html">Tags</a></li>
+        </ul>
+        <p class="col-sm-6 text-sm-right text-muted">
+          Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a> / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

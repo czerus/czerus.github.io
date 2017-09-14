@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>PIT za 2016 na Fedorze | Testing, Linux, Git & stuff
+</title>
+  <link rel="canonical" href="http://czerus.github.io/pit-za-2016-na-fedorze.html">
+
+  <link rel="alternate" type="application/atom+xml" href="http://czerus.github.io/feeds/all.atom.xml" title="Full Atom Feed">
+  <link rel="alternate" type="application/atom+xml" href="http://czerus.github.io/feeds/linux.atom.xml" title="Categories Atom Feed">
+
+
+  <link rel="stylesheet" href="http://czerus.github.io/theme/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http://czerus.github.io/theme/css/font-awesome.min.css">
+  <link rel="stylesheet" href="http://czerus.github.io/theme/css/pygments/default.min.css">
+  <link rel="stylesheet" href="http://czerus.github.io/theme/css/style.css">
+
+
+<meta name="description" content="W pracy od kilku już lat pracuję w środowisku Linux. Mimo wszystkich wad Linuxa przyzwyczaiłem się i polubiłem go. Na magazynie używam Ubuntu 16.04. Ostatnio "z braku wolnego czasu" postanowiłem spróbować przejść na drugą stronę także w domu. Głównym komputerem żony jest telefon więc nie rzucała kłód pod nogi. Wybór padł na Fedorę 25. Dlaczego nie na Ubuntu to już opiszę w innym poście.">
+</head>
+
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1 class="title"><a href="http://czerus.github.io/">Testing, Linux, Git & stuff</a></h1>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="main">
+    <div class="container">
+      <h1>PIT za 2016 na Fedorze
+</h1>
+      <hr>
+<article class="article">
+  <header>
+    <ul class="list-inline">
+      <li class="list-inline-item text-muted" title="2017-03-08T10:20:00+01:00">
+        <i class="fa fa-clock-o"></i>
+        śro 08 marzec 2017
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-folder-open-o"></i>
+        <a href="http://czerus.github.io/category/linux.html">Linux</a>
+      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-user-o"></i>
+        <a href="http://czerus.github.io/author/czerus.html">czerus</a>      </li>
+      <li class="list-inline-item">
+        <i class="fa fa-files-o"></i>
+        <a href="http://czerus.github.io/tag/fedora.html">#fedora</a>,         <a href="http://czerus.github.io/tag/linux.html">#linux</a>,         <a href="http://czerus.github.io/tag/pit.html">#pit</a>,         <a href="http://czerus.github.io/tag/wine.html">#wine</a>      </li>
+    </ul>
+  </header>
+  <div class="content">
+    
+
+<p>W pracy od kilku już lat pracuję w środowisku Linux. Mimo wszystkich wad Linuxa
+przyzwyczaiłem się i polubiłem go. Na magazynie używam Ubuntu 16.04. Ostatnio
+"z braku wolnego czasu" postanowiłem spróbować przejść na drugą stronę także w
+domu. Głównym komputerem żony jest telefon więc nie rzucała kłód pod nogi.
+Wybór padł na Fedorę 25. Dlaczego nie na Ubuntu to już opiszę w innym poście.
+ </p>
+<h2>Pierwszy problem</h2>
+<p>Tak czy siak, tuż po instalacji przyszedł czas na pierwszy poważny sprawdzian -
+wypełnienie PITa. Szybkie googlanie dało odpowiedź w postaci aplikacji
+<a href="https://www.e-pity.pl/pobierz_darmowy_program/">e-pity.py</a>. Problem w tym, że
+wymaga ona Adobe AIR i jeszcze kilku innych bibliotek. Postanowiłem rozejrzeć się
+za inną opcją a konkretnie za programem używaym dotychczas na Windowsie od
+firmy IPS. I rzeczywiście jest wersja <a href="http://www.ips-infor.com.pl/index.php?ml=1&amp;mg=3">PITY2016NG</a>
+ale tylko na "okienka". Postanowiłem spróbować odpalić ją za pomocą <code>wine</code>.</p>
+<h2>Instalacja</h2>
+<p>Polecenie</p>
+<div class="highlight"><pre><span></span>$ sudo dnf install wine
+</pre></div>
+
+
+<p>Zainstaluje wine oraz kilka niezbędnych dodatków. Następnie pobieramy instalator pogramu
+klikamy prawym przyciskiem mszki na nim i z menu "Otwórz za pomocą innego programu"
+wybieramy "Wine Windows Program Launcher".</p>
+<p><img alt="Wybór opcji menu" src="http://czerus.github.io/img/wine_instalator.png"></p>
+<p>Uruchomi się standardowy instalator windows gdzie klikamy po prostu dalej, dalej itd.</p>
+<p><img alt="Kreator instalacji PITy 2016 IPS" src="http://czerus.github.io/img/kreator_instalacji_pity_ips.png"></p>
+<p>Po zakończonej instalacji program możemy znaleźć w Dashu jako <strong>PITy 2016</strong>.</p>
+<h2>Wyniki</h2>
+<p>Po odpaleniu programu bez problemu mogłem wypełnić PIT-37, wysłać na Testowy serwer
+Ministerstwa a także wysłać już finalną wersję pitu do rozliczenia.</p>
+<p><img alt="Okno programu PITy 2016" src="http://czerus.github.io/img/pity2016_ips.png"></p>
+<h2>Problemy</h2>
+<ul>
+<li>Drukowanie do PDF tworzy PDF z pustymi stronami. Aby rozwiązać ten problem
+należy zainstalować cups-pdf (<code>sudo dnf install cups-pdf</code>) i aby utworzyć PDF wybrać "Plik" -&gt; "Drukuj" -&gt;
+a w profilu (w oknie ustawień drukowania) "Cups-PDF".</li>
+<li>Wine przechwytuje <code>ALT+Tab</code>, który przestaje działać w systemie.</li>
+<li>Po wyłączeniu aplikacji jej ikonka dalej pozostaje w doku (mimo, że nie ma nawet
+  procesu aplikacji).</li>
+</ul>
+<p>Na szczęście główna funkcjonalność działa a z problemami można się jakoś przemęczyć ten jeden raz w roku.</p>
+<h2>Ubuntu</h2>
+<p>Okazuje się, że na Ubuntu 16.04 (kernel 4.8) zarówno drukowanie/eksport do PDF jak i wyłączenie
+aplikacji oraz <code>ALT+Tab</code> działa bez problemów. Więc obstawiam, że głównym winowajcą na Fedorze jest
+Wayland.</p>
+  </div>
+</article>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+       <ul class="col-sm-6 list-inline">
+          <li class="list-inline-item"><a href="http://czerus.github.io/authors.html">Authors</a></li>
+          <li class="list-inline-item"><a href="http://czerus.github.io/archives.html">Archives</a></li>
+          <li class="list-inline-item"><a href="http://czerus.github.io/categories.html">Categories</a></li>
+          <li class="list-inline-item"><a href="http://czerus.github.io/tags.html">Tags</a></li>
+        </ul>
+        <p class="col-sm-6 text-sm-right text-muted">
+          Generated by <a href="https://github.com/getpelican/pelican" target="_blank">Pelican</a> / <a href="https://github.com/nairobilug/pelican-alchemy" target="_blank">&#x2728;</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+</body>
+
+</html>

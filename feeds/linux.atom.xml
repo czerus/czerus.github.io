@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Testing, Linux, Git &amp; stuff - Linux</title><link href="http://czerus.github.io/" rel="alternate"></link><link href="http://czerus.github.io/feeds/linux.atom.xml" rel="self"></link><id>http://czerus.github.io/</id><updated>2017-03-11T00:39:00+01:00</updated><entry><title>Fedy - Łatwa konfiguracja Fedory</title><link href="http://czerus.github.io/fedy-latwa-konfiguracja-fedory.html" rel="alternate"></link><published>2017-03-11T00:39:00+01:00</published><updated>2017-03-11T00:39:00+01:00</updated><author><name>czerus</name></author><id>tag:czerus.github.io,2017-03-11:/fedy-latwa-konfiguracja-fedory.html</id><summary type="html">
+
+&lt;p&gt;Szukając informacji jak zainstalować &lt;code&gt;Sublime Text&lt;/code&gt; na Fedorze naktnąłem się 
+na narzędzie o nazwie &lt;a href="https://www.folkswithhats.org/"&gt;Fedy&lt;/a&gt;.
+</summary><content type="html">
+
+&lt;p&gt;Szukając informacji jak zainstalować &lt;code&gt;Sublime Text&lt;/code&gt; na Fedorze naktnąłem się 
+na narzędzie o nazwie &lt;a href="https://www.folkswithhats.org/"&gt;Fedy&lt;/a&gt;.
+ &lt;/p&gt;
+&lt;p&gt;Program umożliwia na:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;łatwą instalację wielu aplikacji jak i kodeków&lt;/li&gt;
+&lt;li&gt;instalację czcionek Microsoftu&lt;/li&gt;
+&lt;li&gt;konfiugrację wygładzania czcionek czy też konfigurację touchpadu&lt;/li&gt;
+&lt;li&gt;dograć dodatkowe tematy Gnome oraz paczki ikon (polecam Paper oraz Arc)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Narzędzie można zainstalować za pomocą polecenia:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;curl https://www.folkswithhats.org/installer &lt;span class="p"&gt;|&lt;/span&gt; sudo bash
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;a uruchomić odszukując Fedy w Dashu.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Fedy" src="http://czerus.github.io/img/fedy.png"&gt;&lt;/p&gt;</content><category term="fedora"></category><category term="linux"></category><category term="fedy"></category></entry><entry><title>PIT za 2016 na Fedorze</title><link href="http://czerus.github.io/pit-za-2016-na-fedorze.html" rel="alternate"></link><published>2017-03-08T10:20:00+01:00</published><updated>2017-03-08T10:20:00+01:00</updated><author><name>czerus</name></author><id>tag:czerus.github.io,2017-03-08:/pit-za-2016-na-fedorze.html</id><summary type="html">
+
+&lt;p&gt;W pracy od kilku już lat pracuję w środowisku Linux. Mimo wszystkich wad Linuxa
+przyzwyczaiłem się i polubiłem go. Na magazynie używam Ubuntu 16.04. Ostatnio
+"z braku wolnego czasu" postanowiłem spróbować przejść na drugą stronę także w
+domu. Głównym komputerem żony jest telefon więc nie rzucała kłód pod nogi.
+Wybór padł na Fedorę 25. Dlaczego nie na Ubuntu to już opiszę w innym poście.
+</summary><content type="html">
+
+&lt;p&gt;W pracy od kilku już lat pracuję w środowisku Linux. Mimo wszystkich wad Linuxa
+przyzwyczaiłem się i polubiłem go. Na magazynie używam Ubuntu 16.04. Ostatnio
+"z braku wolnego czasu" postanowiłem spróbować przejść na drugą stronę także w
+domu. Głównym komputerem żony jest telefon więc nie rzucała kłód pod nogi.
+Wybór padł na Fedorę 25. Dlaczego nie na Ubuntu to już opiszę w innym poście.
+ &lt;/p&gt;
+&lt;h2&gt;Pierwszy problem&lt;/h2&gt;
+&lt;p&gt;Tak czy siak, tuż po instalacji przyszedł czas na pierwszy poważny sprawdzian -
+wypełnienie PITa. Szybkie googlanie dało odpowiedź w postaci aplikacji
+&lt;a href="https://www.e-pity.pl/pobierz_darmowy_program/"&gt;e-pity.py&lt;/a&gt;. Problem w tym, że
+wymaga ona Adobe AIR i jeszcze kilku innych bibliotek. Postanowiłem rozejrzeć się
+za inną opcją a konkretnie za programem używaym dotychczas na Windowsie od
+firmy IPS. I rzeczywiście jest wersja &lt;a href="http://www.ips-infor.com.pl/index.php?ml=1&amp;amp;mg=3"&gt;PITY2016NG&lt;/a&gt;
+ale tylko na "okienka". Postanowiłem spróbować odpalić ją za pomocą &lt;code&gt;wine&lt;/code&gt;.&lt;/p&gt;
+&lt;h2&gt;Instalacja&lt;/h2&gt;
+&lt;p&gt;Polecenie&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo dnf install wine
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Zainstaluje wine oraz kilka niezbędnych dodatków. Następnie pobieramy instalator pogramu
+klikamy prawym przyciskiem mszki na nim i z menu "Otwórz za pomocą innego programu"
+wybieramy "Wine Windows Program Launcher".&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Wybór opcji menu" src="http://czerus.github.io/img/wine_instalator.png"&gt;&lt;/p&gt;
+&lt;p&gt;Uruchomi się standardowy instalator windows gdzie klikamy po prostu dalej, dalej itd.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Kreator instalacji PITy 2016 IPS" src="http://czerus.github.io/img/kreator_instalacji_pity_ips.png"&gt;&lt;/p&gt;
+&lt;p&gt;Po zakończonej instalacji program możemy znaleźć w Dashu jako &lt;strong&gt;PITy 2016&lt;/strong&gt;.&lt;/p&gt;
+&lt;h2&gt;Wyniki&lt;/h2&gt;
+&lt;p&gt;Po odpaleniu programu bez problemu mogłem wypełnić PIT-37, wysłać na Testowy serwer
+Ministerstwa a także wysłać już finalną wersję pitu do rozliczenia.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Okno programu PITy 2016" src="http://czerus.github.io/img/pity2016_ips.png"&gt;&lt;/p&gt;
+&lt;h2&gt;Problemy&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Drukowanie do PDF tworzy PDF z pustymi stronami. Aby rozwiązać ten problem
+należy zainstalować cups-pdf (&lt;code&gt;sudo dnf install cups-pdf&lt;/code&gt;) i aby utworzyć PDF wybrać "Plik" -&amp;gt; "Drukuj" -&amp;gt;
+a w profilu (w oknie ustawień drukowania) "Cups-PDF".&lt;/li&gt;
+&lt;li&gt;Wine przechwytuje &lt;code&gt;ALT+Tab&lt;/code&gt;, który przestaje działać w systemie.&lt;/li&gt;
+&lt;li&gt;Po wyłączeniu aplikacji jej ikonka dalej pozostaje w doku (mimo, że nie ma nawet
+  procesu aplikacji).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Na szczęście główna funkcjonalność działa a z problemami można się jakoś przemęczyć ten jeden raz w roku.&lt;/p&gt;
+&lt;h2&gt;Ubuntu&lt;/h2&gt;
+&lt;p&gt;Okazuje się, że na Ubuntu 16.04 (kernel 4.8) zarówno drukowanie/eksport do PDF jak i wyłączenie
+aplikacji oraz &lt;code&gt;ALT+Tab&lt;/code&gt; działa bez problemów. Więc obstawiam, że głównym winowajcą na Fedorze jest
+Wayland.&lt;/p&gt;</content><category term="fedora"></category><category term="linux"></category><category term="pit"></category><category term="wine"></category></entry></feed>
