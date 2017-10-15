@@ -1,5 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Testing, Linux, Git &amp; stuff</title><link href="https://czerus.github.io/" rel="alternate"></link><link href="https://czerus.github.io/feeds/all.atom.xml" rel="self"></link><id>https://czerus.github.io/</id><updated>2017-09-14T22:20:00+02:00</updated><entry><title>Jekyll vs Pelican</title><link href="https://czerus.github.io/jekyll-vs-pelican.html" rel="alternate"></link><published>2017-09-14T22:20:00+02:00</published><updated>2017-09-14T22:20:00+02:00</updated><author><name>czerus</name></author><id>tag:czerus.github.io,2017-09-14:/jekyll-vs-pelican.html</id><summary type="html">
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Testing, Linux, Git &amp; stuff</title><link href="https://czerus.github.io/" rel="alternate"></link><link href="https://czerus.github.io/feeds/all.atom.xml" rel="self"></link><id>https://czerus.github.io/</id><updated>2017-10-16T22:20:00+02:00</updated><entry><title>(Prawie) wszystkie grzechy Bamboo</title><link href="https://czerus.github.io/prawie-wszystkie-grzechy-bamboo.html" rel="alternate"></link><published>2017-10-16T22:20:00+02:00</published><updated>2017-10-16T22:20:00+02:00</updated><author><name>czerus</name></author><id>tag:czerus.github.io,2017-10-16:/prawie-wszystkie-grzechy-bamboo.html</id><summary type="html">
+&lt;p&gt;Bamboo od Atlassiana to obok Jenkinsa niemal synonim serwera Continuous Integration (CI). Od niemal dwóch lat mam okazję
+używać tego narzędzia oraz dokonywać jego podstawowej konfiguracji. Niestety natknąłem się na kilka dosyć sporych
+problemów, których nie spodziewałem się w narzędziu sprzedawanym za całkiem duże pieniądze.
+</summary><content type="html">
+&lt;p&gt;Bamboo od Atlassiana to obok Jenkinsa niemal synonim serwera Continuous Integration (CI). Od niemal dwóch lat mam okazję
+używać tego narzędzia oraz dokonywać jego podstawowej konfiguracji. Niestety natknąłem się na kilka dosyć sporych
+problemów, których nie spodziewałem się w narzędziu sprzedawanym za całkiem duże pieniądze.
+ &lt;/p&gt;
+&lt;h2&gt;1. Błędy we wbudowanych wtyczkach&lt;/h2&gt;
+&lt;p&gt;Za przykład niech tu posłuży "Artifact Downloader" task. Jest to task służący do pobierania artefaktów udostępnionych 
+przez inne plany. Przykładowy scenariusz użycia:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Build plan tworzy binarki System Under Test (SUT) i udostępnia je innym planom jako "shared artifact".&lt;/li&gt;
+&lt;li&gt;Test plan pobiera tak udostępnione artefakty, instaluje i przeprowadza testy.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Okazuje się, że pobranie około 5 GB artefaktów zajmuje pluginowi około 6 minut (~112 Mbps!!! przy 1GB łączu). Sporo... 
+Zwłaszcza, że wykonanie tego samego zadania w tasku typu wykonanie skryptu zajmuje nieco ponad minutę (za pomocą polecenia &lt;code&gt;curl&lt;/code&gt;). 
+Oczywiście okazuje się, że &lt;a href="https://jira.atlassian.com/browse/BAM-8111"&gt;błąd&lt;/a&gt; został już zgłoszony i naprawiony. 
+Mimo to w naszej (załatanej) wersji Bamboo problem dalej występuje.&lt;/p&gt;
+&lt;h2&gt;2. Błędy w liczeniu czasu buildu&lt;/h2&gt;
+&lt;p&gt;Czas trwania buildu liczony jest od momentu kliknięcia ikonki "Run" albo dodania buildu do kolejki przez inny build (przy dependent builds). Do realnego czasu trwania np. testów doliczany jest więc czas, który build "spędził" w poczekalni. Niby nic, ale 
+bardzo to zakłamuje statystyki. Nagle wychodzi, że czas trwania uruchomienia 10 testów, które do niedawna zajmowały 10 minut
+zajmuje 40. Prawdopodobnie, ktoś z zespołu zmarnuje nieco czasu próbując rozwikłać tą zagadkę. &lt;/p&gt;
+&lt;p&gt;Ponadto średni czas trwania buildu jest brany pod uwagę przez wtyczkę "HungBuildKiller", która na podstawie czasu trwania
+buildu ocenia czy build rzeczywiście utknął czy też nie. &lt;/p&gt;
+&lt;h2&gt;3. Niekompletna dokumentacja REST API&lt;/h2&gt;
+&lt;p&gt;Bamboo udostępnia &lt;a href="https://developer.atlassian.com/bamboodev/rest-apis"&gt;API&lt;/a&gt; do pobierania informacji oraz uruchamiania akcji na serwerze. Response może zostać zwrócony jako dokument XML lub JSON. Niestety dosyć obszerna dokumentacja pomija ważne fakty, np. dokumentacja label dla "Build Service" wygląda następująco:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;?label=labelname — List the latest builds which have a build result labelled with a particular label(s). labelname can be the name of a single label (e.g. deploy_failed) or a comma-separated list of label names (e.g. {deploy_failed,deploy_successful)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Możnaby się spodziewać, że &lt;code&gt;?label=moja_labelka&lt;/code&gt; zwróci wszystkie buildy mające label "moja_labelka" ale nic bardziej mylnego. Okazuje się, że są zwracane jedynie buildy z &lt;strong&gt;master&lt;/strong&gt;planów. Wszystkie branche są pomijane... I tak mając do dyspozycji API można skończyć na web scrappingu...&lt;/p&gt;
+&lt;h2&gt;4. Dziwne zachowanie "Rerun failed/incomplete jobs"&lt;/h2&gt;
+&lt;p&gt;"Rerun failed/incomplete jobs" jest to funkcjonalność Bamboo umożliwiająca na ponowne uruchomienie tylko tego stage'a, który 
+sfailował (lub całego buildu jeżeli jest tylko jeden stage). Według dokumentacji build powinien zostać powtórzony z użyciem
+tej samej rewizji kodu. Dokumentacja nie wspomina za to o tym, że nie gwarantuje użycia tych samych artefaktów jeżeli build pobiera takowe
+przez nieszczęsny artifact downloader task. &lt;/p&gt;
+&lt;h2&gt;5. GUI&lt;/h2&gt;
+&lt;p&gt;Dotychacz używałem głównie Bamboo w wersji 5.8.x. Jakież było moje zdziwienie gdy w wersji 6.x zobaczyłem dokładnie taką samą szatę graficzną i głupie błędy w funkcjonalności. Niby nie jest źle ale nawet Jenkins poszedł do przodu a Bamboo stoi w miejscu.&lt;/p&gt;
+&lt;h2&gt;6. Podejście Atlassiana do zgłaszanych błędów&lt;/h2&gt;
+&lt;p&gt;Więkoszość z opisanych problemów zostało zgłoszonych w &lt;a href="https://jira.atlassian.com/projects/BAM/issues/BAM-18294?filter=allopenissues"&gt;Jirze Bamboo&lt;/a&gt;.
+Są to także w większości prawdziwe bugi, a nie propozycje usprawnień. Zazwyczaj utrudniają one pracę w projekcie.
+I gdy próbuje się wygooglać rozwiązania problemu znajduje się Jirę. Jirę otwartą 2, 3 a nawet 4 lata temu. Jirę nieprzypisaną do nikogo.
+Jirę, do której co jakiś czas ktoś dodaje komentarz i upvotowaną w celu zwrócenia uwagi producenta, że oczekuje się naprawy. Aż ręce opadają...
+I całkowicie zrozumiałbym takie zachowanie producenta każdego darmowego produktu ale nie płatnego rozwiązania.&lt;/p&gt;
+&lt;h2&gt;Podsumowanie&lt;/h2&gt;
+&lt;p&gt;Czy zatem Bamboo jest złe? Chyba nie. A przynajmniej nie aż tak. Zazwyczaj działa i spełnia swoje zadania dobrze. Powyższa lista to moje prywatne bolączki, które bardzo dziwią w produkcie za 4400 USD dla 10 zdalnych agentów (a to wcale nie jest dużo).&lt;/p&gt;
+&lt;p&gt;Code on!&lt;/p&gt;</content><category term="bamboo"></category><category term="ci"></category></entry><entry><title>Jekyll vs Pelican</title><link href="https://czerus.github.io/jekyll-vs-pelican.html" rel="alternate"></link><published>2017-09-14T22:20:00+02:00</published><updated>2017-09-14T22:20:00+02:00</updated><author><name>czerus</name></author><id>tag:czerus.github.io,2017-09-14:/jekyll-vs-pelican.html</id><summary type="html">
 &lt;p&gt;Od kilku lat coraz większą popularność zdobywają generatory statycznych stron wwww takie jak Jekyll. Dlaczego ludzie 
 wybierają technologię rodem z poprzedniego wieku w dobie WordPressa? I czym właściwie jest wspomniany Jekyll i czym różni
 się od Pelicana?
